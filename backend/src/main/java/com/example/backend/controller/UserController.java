@@ -36,15 +36,15 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Map<String, Object>> login(@RequestParam String email, @RequestParam String password) {
+    public ResponseEntity<Map<String, Object>> login(@RequestBody Map<String, String> credentials) {
         try {
-            Optional<User> userOptional = userService.findUserByEmail(email);
+            Optional<User> userOptional = userService.findUserByEmail(credentials.get("email"));
             if (userOptional.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
             }
 
             User user = userOptional.get();
-            if (user.getPassword().equals(password)) {
+            if (user.getPassword().equals(credentials.get("password"))) {
                 Map<String, Object> response = new HashMap<>();
                 response.put("message", "Login successful.");
                 response.put("user", user);

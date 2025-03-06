@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart'; // Import the provider package
+import 'package:provider/provider.dart';
 import 'package:frontend/src/providers/login_provider.dart';
+import 'package:frontend/src/screens/register_screen.dart'; // Import the RegisterScreen
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
@@ -11,7 +12,7 @@ class LoginScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Login'),
+        title: const Text('Login'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -20,17 +21,28 @@ class LoginScreen extends StatelessWidget {
           children: [
             TextField(
               controller: loginProvider.emailController,
-              decoration: InputDecoration(labelText: 'Email'),
+              decoration: const InputDecoration(labelText: 'Email'),
             ),
             TextField(
               controller: loginProvider.passwordController,
-              decoration: InputDecoration(labelText: 'Password'),
+              decoration: const InputDecoration(labelText: 'Password'),
               obscureText: true,
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () => loginProvider.login(context),
-              child: Text('Login'),
+              child: const Text('Login'),
+            ),
+            const SizedBox(height: 10),
+            TextButton(
+              onPressed: () {
+                // Navigate to RegisterScreen
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const RegisterScreen()),
+                );
+              },
+              child: const Text('Don\'t have an account? Register here'),
             ),
           ],
         ),
