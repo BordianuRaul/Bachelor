@@ -25,7 +25,6 @@ class RegisterProvider with ChangeNotifier {
     'zoho.com',
   ];
 
-  // Email validation function
   bool _isValidEmail(String email) {
     final emailRegex = RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
 
@@ -33,12 +32,10 @@ class RegisterProvider with ChangeNotifier {
       return false; // Invalid format
     }
 
-    // Extract domain and check if it's in the allowed list
     final domain = email.split('@').last;
     return allowedDomains.contains(domain);
   }
 
-  // Password validation function
   bool _isValidPassword(String password) {
     final passwordRegex =
     RegExp(r'^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$');
@@ -67,7 +64,7 @@ class RegisterProvider with ChangeNotifier {
               'Password must be at least 8 characters long, contain at least one uppercase letter, one number, and one special character.'),
         ),
       );
-      return; // Stop execution if password is invalid
+      return;
     }
 
     _isLoading = true;
