@@ -29,7 +29,7 @@ class RegisterProvider with ChangeNotifier {
       await _authService.register(firstName, lastName, email, password);
 
       // Navigate to login screen after successful registration
-      Navigator.pushReplacementNamed(context, '/login');
+      Navigator.pushReplacementNamed(context, '/');
 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Registration successful! Please log in.')),

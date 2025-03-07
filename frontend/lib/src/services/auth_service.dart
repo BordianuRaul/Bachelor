@@ -51,8 +51,7 @@ class AuthService {
     );
 
     if (response.statusCode == 201) {
-      final Map<String, dynamic> data = jsonDecode(response.body);
-      final User user = User.fromJson(data['user']);
+      final String responseString = response.body;
     } else {
       throw Exception('Failed to register');
     }

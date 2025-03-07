@@ -49,7 +49,7 @@ class RegisterScreen extends StatelessWidget {
             ),
             TextButton(
               onPressed: () {
-                Navigator.pushReplacementNamed(context, '/login');
+                Navigator.pushReplacementNamed(context, '/');
               },
               child: const Text('Already have an account? Log in'),
             ),
