@@ -12,6 +12,22 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   bool isLogin = true;
+  late FocusNode _emailFocusNode;
+  late FocusNode _passwordFocusNode;
+
+  @override
+  void initState() {
+    super.initState();
+    _emailFocusNode = FocusNode();
+    _passwordFocusNode = FocusNode();
+  }
+
+  @override
+  void dispose() {
+    _emailFocusNode.dispose();
+    _passwordFocusNode.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -19,67 +35,76 @@ class _LoginScreenState extends State<LoginScreen> {
 
     return Scaffold(
       backgroundColor: Colors.black,
-      body: LayoutBuilder(
-        builder: (context, constraints) {
-          double screenHeight = constraints.maxHeight;
-
-          return Stack(
-            children: [
-              // Background with Blur
-              SizedBox(
-                height: screenHeight * 0.5,
-                child: Stack(
-                  children: [
-                    Container(
-                      decoration: const BoxDecoration(
-                        image: DecorationImage(
-                          image: AssetImage('assets/images/ui_background.jpeg'),
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                      child: BackdropFilter(
-                        filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-                        child: Container(
-                          color: Colors.black.withOpacity(0.5),
-                        ),
-                      ),
-                    ),
-                    // Title & Subtitle
-                    Positioned(
-                      top: screenHeight * 0.15,
-                      left: 20,
-                      right: 20,
-                      child: Column(
-                        children: const [
-                          Text(
-                            'Get Started with Ease',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 28,
-                              fontWeight: FontWeight.bold,
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                          SizedBox(height: 10),
-                          Text(
-                            'Sign in or create an account to effortlessly manage your daily habits.',
-                            style: TextStyle(
-                              color: Colors.white70,
-                              fontSize: 16,
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
+      body: Stack(
+        children: [
+          // Background with Blur
+          Container(
+            width: double.infinity,
+            height: double.infinity,
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('assets/images/ui_background.jpeg'),
+                fit: BoxFit.cover,
               ),
-              // Bottom Card UI
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: FractionallySizedBox(
-                  heightFactor: 0.55,
+            ),
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+              child: Container(
+                color: Colors.black.withOpacity(0.5),
+              ),
+            ),
+          ),
+          // Title & Subtitle at the top
+          Positioned(
+            top: MediaQuery.of(context).size.height * 0.2,  // Adjust position from top
+            left: 0,
+            right: 0,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                // Title with dynamic scaling
+                FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    'Let\'s begin...',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 30, // Adjust size as needed
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                const SizedBox(height: 10),
+                // Subtitle with dynamic scaling
+                FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    'Login or Register to continue',
+                    style: TextStyle(
+                      color: Colors.white70,
+                      fontSize: 18, // Adjust size as needed
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          // Login Card UI
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                // Measure available space
+                double cardHeight = constraints.maxHeight;
+                double cardWidth = constraints.maxWidth;
+
+                // Use MediaQuery to check for keyboard visibility
+                double screenHeight = MediaQuery.of(context).size.height;
+                double keyboardHeight = screenHeight - MediaQuery.of(context).viewInsets.bottom;
+
+                return SingleChildScrollView(
                   child: Container(
                     padding: const EdgeInsets.all(24),
                     decoration: const BoxDecoration(
@@ -141,7 +166,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                       child: GestureDetector(
                                         onTap: () {
                                           setState(() {
-                                            isLogin = !isLogin;
+                                            isLogin = true;
                                           });
                                         },
                                         child: Center(
@@ -160,14 +185,14 @@ class _LoginScreenState extends State<LoginScreen> {
                                       child: GestureDetector(
                                         onTap: () {
                                           setState(() {
-                                            isLogin = !isLogin;
+                                            isLogin = false;
                                           });
                                         },
                                         child: Center(
                                           child: Text(
                                             'Register',
                                             style: TextStyle(
-                                              color: isLogin ? const Color(0xFFb8b8b8) : const Color(0xFF282828),
+                                              color: !isLogin ? const Color(0xFF282828) : const Color(0xFFb8b8b8),
                                               fontWeight: FontWeight.bold,
                                               fontSize: 14,
                                             ),
@@ -185,6 +210,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         // Email Input
                         TextField(
                           controller: loginProvider.emailController,
+                          focusNode: _emailFocusNode,
                           decoration: InputDecoration(
                             filled: true,
                             fillColor: Colors.white,
@@ -209,6 +235,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         // Password Input
                         TextField(
                           controller: loginProvider.passwordController,
+                          focusNode: _passwordFocusNode,
                           obscureText: true,
                           decoration: InputDecoration(
                             filled: true,
@@ -254,11 +281,11 @@ class _LoginScreenState extends State<LoginScreen> {
                       ],
                     ),
                   ),
-                ),
-              ),
-            ],
-          );
-        },
+                );
+              },
+            ),
+          ),
+        ],
       ),
     );
   }

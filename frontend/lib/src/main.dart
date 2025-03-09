@@ -14,10 +14,10 @@ void main() {
       ],
       child: MaterialApp(
         initialRoute: '/',  // Start with login screen
-        onGenerateRoute: Routes.generateRoute,  // ✅ Use your custom route generator
+        onGenerateRoute: Routes.generateRoute,
         theme: ThemeData(primarySwatch: Colors.blue),
+        debugShowCheckedModeBanner: false,
       ),
     ),
   );
 }
-
