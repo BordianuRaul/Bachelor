@@ -1,6 +1,5 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:frontend/src/screens/register_screen.dart';
 import 'package:provider/provider.dart';
 import '../providers/login_provider.dart';
 
@@ -84,7 +83,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: Container(
                     padding: const EdgeInsets.all(24),
                     decoration: const BoxDecoration(
-                      color: Color(0xFFFFFFFF), // White Background
+                      color: Color(0xFFFFFFFF),
                       borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(30),
                         topRight: Radius.circular(30),
@@ -93,99 +92,119 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        // Toggle Switch with Animation
-                        AnimatedSwitcher(
-                          duration: const Duration(milliseconds: 300), // Duration for smooth transition
+                        // Toggle Switch with Slide Animation
+                        GestureDetector(
+                          onHorizontalDragUpdate: (details) {
+                            setState(() {
+                              isLogin = details.localPosition.dx < constraints.maxWidth * 0.5;
+                            });
+                          },
+                          onTap: () {
+                            setState(() {
+                              isLogin = !isLogin;
+                            });
+                          },
                           child: Container(
-                            key: ValueKey<bool>(isLogin), // Key for AnimatedSwitcher to track state changes
-                            height: 70, // Adjusted size
+                            height: 70,
                             width: double.infinity,
                             decoration: BoxDecoration(
                               color: const Color(0xFFEEF0F2),
                               borderRadius: BorderRadius.circular(30),
                             ),
-                            child: Row(
+                            child: Stack(
                               children: [
-                                Expanded(
-                                  child: GestureDetector(
-                                    onTap: () => setState(() => isLogin = true),
-                                    child: AnimatedContainer(
-                                      duration: const Duration(milliseconds: 300),
-                                      decoration: BoxDecoration(
-                                        color: isLogin ? Colors.white : Colors.transparent,
-                                        borderRadius: BorderRadius.circular(50),
-                                        border: Border.all(
-                                          color: isLogin ? const Color(0xFFeef0f2) : Colors.transparent,
-                                          width: 4,
+                                AnimatedAlign(
+                                  duration: const Duration(milliseconds: 300),
+                                  alignment: isLogin ? Alignment.centerLeft : Alignment.centerRight,
+                                  curve: Curves.easeInOut,
+                                  child: Container(
+                                    width: constraints.maxWidth * 0.5,
+                                    height: 60,
+                                    margin: const EdgeInsets.all(5),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(30),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black.withOpacity(0.1),
+                                          blurRadius: 5,
+                                          spreadRadius: 1,
+                                          offset: const Offset(0, 2),
                                         ),
-                                      ),
-                                      alignment: Alignment.center,
-                                      child: Text(
-                                        'Login',
-                                        style: TextStyle(
-                                          color: isLogin ? const Color(0xFF282828) : const Color(0xFFb8b8b8),
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 14, // Smaller font
-                                        ),
-                                      ),
+                                      ],
                                     ),
                                   ),
                                 ),
-                                Expanded(
-                                  child: GestureDetector(
-                                    onTap: () => setState(() => isLogin = false),
-                                    child: AnimatedContainer(
-                                      duration: const Duration(milliseconds: 300),
-                                      decoration: BoxDecoration(
-                                        color: isLogin ? Colors.transparent : Colors.white,
-                                        borderRadius: BorderRadius.circular(50),
-                                        border: Border.all(
-                                          color: isLogin ? Colors.transparent : const Color(0xFFeef0f2),
-                                          width: 4,
-                                        ),
-                                      ),
-                                      alignment: Alignment.center,
-                                      child: Text(
-                                        'Register',
-                                        style: TextStyle(
-                                          color: isLogin ? const Color(0xFFb8b8b8) : const Color(0xFF282828),
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 14, // Smaller font
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          setState(() {
+                                            isLogin = !isLogin;
+                                          });
+                                        },
+                                        child: Center(
+                                          child: Text(
+                                            'Login',
+                                            style: TextStyle(
+                                              color: isLogin ? const Color(0xFF282828) : const Color(0xFFb8b8b8),
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 14,
+                                            ),
+                                          ),
                                         ),
                                       ),
                                     ),
-                                  ),
+                                    Expanded(
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          setState(() {
+                                            isLogin = !isLogin;
+                                          });
+                                        },
+                                        child: Center(
+                                          child: Text(
+                                            'Register',
+                                            style: TextStyle(
+                                              color: isLogin ? const Color(0xFFb8b8b8) : const Color(0xFF282828),
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 14,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ],
                             ),
                           ),
                         ),
-
                         const SizedBox(height: 20),
                         // Email Input
                         TextField(
                           controller: loginProvider.emailController,
                           decoration: InputDecoration(
                             filled: true,
-                            fillColor: Colors.white, // White background
-                            labelText: 'Email Address', // Label text that will float when typing
-                            labelStyle: const TextStyle(color: Color(0xFFb8b8b8)), // Label color
+                            fillColor: Colors.white,
+                            labelText: 'Email Address',
+                            labelStyle: const TextStyle(color: Color(0xFFb8b8b8)),
                             enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
-                              borderSide: const BorderSide(color: Color(0xFFF5F5F5)), // Light gray border
+                              borderSide: const BorderSide(color: Color(0xFFF5F5F5)),
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
-                              borderSide: const BorderSide(color: Color(0xFFF5F5F5)), // Same border when focused
+                              borderSide: const BorderSide(color: Color(0xFFF5F5F5)),
                             ),
                             prefixIcon: Padding(
                               padding: const EdgeInsets.all(12),
-                              child: Icon(Icons.email, color: Color(0xFF6E947C), size: 32), // Bigger icon
+                              child: Icon(Icons.email, color: Color(0xFF6E947C), size: 32),
                             ),
                           ),
                           style: const TextStyle(color: Colors.black),
                         ),
-
                         const SizedBox(height: 15),
                         // Password Input
                         TextField(
@@ -193,36 +212,35 @@ class _LoginScreenState extends State<LoginScreen> {
                           obscureText: true,
                           decoration: InputDecoration(
                             filled: true,
-                            fillColor: Colors.white, // White background
-                            labelText: 'Password', // Label text that will float when typing
-                            labelStyle: const TextStyle(color: Color(0xFFb8b8b8)), // Label color
+                            fillColor: Colors.white,
+                            labelText: 'Password',
+                            labelStyle: const TextStyle(color: Color(0xFFb8b8b8)),
                             enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
-                              borderSide: const BorderSide(color: Color(0xFFF5F5F5)), // Light gray border
+                              borderSide: const BorderSide(color: Color(0xFFF5F5F5)),
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
-                              borderSide: const BorderSide(color: Color(0xFFF5F5F5)), // Same border when focused
+                              borderSide: const BorderSide(color: Color(0xFFF5F5F5)),
                             ),
                             prefixIcon: Padding(
                               padding: const EdgeInsets.all(12),
-                              child: Icon(Icons.lock, color: Color(0xFF6E947C), size: 32), // Bigger icon
+                              child: Icon(Icons.lock, color: Color(0xFF6E947C), size: 32),
                             ),
                           ),
                           style: const TextStyle(color: Colors.black),
                         ),
-
                         const SizedBox(height: 20),
                         // Pill-Shaped Login Button
                         ElevatedButton(
                           onPressed: () => loginProvider.login(context),
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFF6E947C), // Custom Green
+                            backgroundColor: const Color(0xFF6E947C),
                             padding: const EdgeInsets.symmetric(vertical: 14),
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30), // Fully rounded
+                              borderRadius: BorderRadius.circular(30),
                             ),
-                            elevation: 4, // Added shadow
+                            elevation: 4,
                           ),
                           child: const SizedBox(
                             width: double.infinity,
