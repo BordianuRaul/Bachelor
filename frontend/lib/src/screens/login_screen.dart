@@ -166,7 +166,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                       child: GestureDetector(
                                         onTap: () {
                                           setState(() {
-                                            isLogin = true;
+                                            isLogin = !isLogin;
                                           });
                                         },
                                         child: Center(
@@ -185,7 +185,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                       child: GestureDetector(
                                         onTap: () {
                                           setState(() {
-                                            isLogin = false;
+                                            isLogin = !isLogin;
                                           });
                                         },
                                         child: Center(
