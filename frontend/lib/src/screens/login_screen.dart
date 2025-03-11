@@ -7,10 +7,10 @@ class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
   @override
-  _LoginScreenState createState() => _LoginScreenState();
+  LoginScreenState createState() => LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class LoginScreenState extends State<LoginScreen> {
   bool isLogin = true;
   late FocusNode _emailFocusNode;
   late FocusNode _passwordFocusNode;
@@ -59,7 +59,7 @@ class _LoginScreenState extends State<LoginScreen> {
             top: MediaQuery.of(context).size.height * 0.2,  // Adjust position from top
             left: 0,
             right: 0,
-            child: Column(
+            child: const Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 // Title with dynamic scaling
@@ -75,7 +75,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     textAlign: TextAlign.center,
                   ),
                 ),
-                const SizedBox(height: 10),
+                SizedBox(height: 10),
                 // Subtitle with dynamic scaling
                 FittedBox(
                   fit: BoxFit.scaleDown,
@@ -96,14 +96,6 @@ class _LoginScreenState extends State<LoginScreen> {
             alignment: Alignment.bottomCenter,
             child: LayoutBuilder(
               builder: (context, constraints) {
-                // Measure available space
-                double cardHeight = constraints.maxHeight;
-                double cardWidth = constraints.maxWidth;
-
-                // Use MediaQuery to check for keyboard visibility
-                double screenHeight = MediaQuery.of(context).size.height;
-                double keyboardHeight = screenHeight - MediaQuery.of(context).viewInsets.bottom;
-
                 return SingleChildScrollView(
                   child: Container(
                     padding: const EdgeInsets.all(24),
@@ -224,8 +216,8 @@ class _LoginScreenState extends State<LoginScreen> {
                               borderRadius: BorderRadius.circular(12),
                               borderSide: const BorderSide(color: Color(0xFFF5F5F5)),
                             ),
-                            prefixIcon: Padding(
-                              padding: const EdgeInsets.all(12),
+                            prefixIcon: const Padding(
+                              padding: EdgeInsets.all(12),
                               child: Icon(Icons.email, color: Color(0xFF6E947C), size: 32),
                             ),
                           ),
@@ -250,8 +242,8 @@ class _LoginScreenState extends State<LoginScreen> {
                               borderRadius: BorderRadius.circular(12),
                               borderSide: const BorderSide(color: Color(0xFFF5F5F5)),
                             ),
-                            prefixIcon: Padding(
-                              padding: const EdgeInsets.all(12),
+                            prefixIcon: const Padding(
+                              padding: EdgeInsets.all(12),
                               child: Icon(Icons.lock, color: Color(0xFF6E947C), size: 32),
                             ),
                           ),
