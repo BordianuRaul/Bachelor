@@ -1,16 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/src/providers/login_provider.dart';
-import 'package:frontend/src/providers/register_provider.dart';
+import 'package:frontend/src/providers/auth_provider.dart';
 import 'package:frontend/src/routes/routes.dart';
-import 'package:frontend/src/screens/login_screen.dart';
+import 'package:frontend/src/screens/auth_screen.dart';
 import 'package:provider/provider.dart';
 
 void main() {
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => LoginProvider()),
-        ChangeNotifierProvider(create: (_) => RegisterProvider())
+        ChangeNotifierProvider(create: (_) => AuthProvider()),
       ],
       child: MaterialApp(
         initialRoute: '/',  // Start with login screen

@@ -1,18 +1,13 @@
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../screens/home_screen.dart';
-import '../screens/login_screen.dart';
-import '../screens/register_screen.dart';
+import '../screens/auth_screen.dart';
 
 class Routes {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
       case '/':
-        return MaterialPageRoute(builder: (_) => const LoginScreen());
-      case '/register':
-        return MaterialPageRoute(builder: (_) => const RegisterScreen());
+        return MaterialPageRoute(builder: (_) => const AuthScreen());
       case '/home':
         return MaterialPageRoute(builder: (_) => const HomeScreen());
       default:
