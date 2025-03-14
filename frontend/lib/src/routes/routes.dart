@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../screens/grant_access_screen.dart';
 import '../screens/home_screen.dart';
 import '../screens/auth_screen.dart';
 
@@ -8,6 +9,8 @@ class Routes {
     switch (settings.name) {
       case '/':
         return MaterialPageRoute(builder: (_) => const AuthScreen());
+      case '/grantAccess':
+        return MaterialPageRoute(builder: (_) => const GrantAccessScreen());
       case '/home':
         return MaterialPageRoute(builder: (_) => const HomeScreen());
       default:

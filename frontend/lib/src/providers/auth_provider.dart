@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/src/services/permission_service.dart';
 import '../services/auth_service.dart';
 
 class AuthProvider with ChangeNotifier {
@@ -9,6 +10,7 @@ class AuthProvider with ChangeNotifier {
   final TextEditingController confirmPasswordController = TextEditingController();
 
   final AuthService _authService = AuthService();
+  final PermissionService _permissionService = PermissionService();
 
   Future<void> login(BuildContext context) async {
     final email = emailController.text;
@@ -16,14 +18,20 @@ class AuthProvider with ChangeNotifier {
 
     try {
       await _authService.login(email, password);
-      Navigator.pushReplacementNamed(context, '/home');
+
+      List<String> missingPermissions = await _permissionService.getMissingPermissions();
+
+      if (missingPermissions.isEmpty) {
+        Navigator.pushReplacementNamed(context, '/home');
+      } else {
+        Navigator.pushReplacementNamed(context, '/grantAccess');
+      }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Login failed: ${e.toString()}')),
       );
     }
   }
-
   Future<void> register(BuildContext context) async {
     final firstName = firstNameController.text;
     final lastName = lastNameController.text;
