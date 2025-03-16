@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:frontend/src/services/permission_service.dart';
 import '../widgets/blurred_background.dart';
 
+//USE POPUPS INSTEAD OF BASIC BUTTONS
+
 class GrantAccessScreen extends StatefulWidget {
   const GrantAccessScreen({super.key});
 
@@ -69,12 +71,12 @@ class GrantAccessScreenState extends State<GrantAccessScreen> {
   }
 
   Widget _buildTextSection() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24.0),
+    return const Padding(
+      padding: EdgeInsets.symmetric(horizontal: 24.0),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Text(
+           Text(
             "Permissions Required",
             style: TextStyle(
               color: Colors.white,
@@ -83,8 +85,8 @@ class GrantAccessScreenState extends State<GrantAccessScreen> {
             ),
             textAlign: TextAlign.center,
           ),
-          const SizedBox(height: 10),
-          const Text(
+           SizedBox(height: 10),
+           Text(
             "To continue, please grant the necessary permissions.",
             style: TextStyle(
               color: Colors.white70,
@@ -125,7 +127,7 @@ class GrantAccessScreenState extends State<GrantAccessScreen> {
             borderRadius: BorderRadius.circular(30),
             side: isRetry ? const BorderSide(color: Color(0xFFA0B0C0), width: 1.5) : BorderSide.none, // Subtle border for retry
           ),
-          elevation: isRetry ? 2 : 3, // Retry has a slightly lower elevation
+          elevation: isRetry ? 2 : 3,
         ),
         child: SizedBox(
           width: double.infinity,
