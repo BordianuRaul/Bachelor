@@ -64,7 +64,7 @@ flutter:
   assets:
     - assets/google.svg
     - assets/images/ui_background.jpeg
-
+    - assets/images/rick.jpg
 
 
 
