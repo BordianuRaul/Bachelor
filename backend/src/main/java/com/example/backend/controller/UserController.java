@@ -9,10 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:4200")
@@ -73,14 +70,14 @@ public class UserController {
 
     //ADD JWT FOR TOKENIZED LOGIN
     @PostMapping("/addHabit")
-    public ResponseEntity<String> addHabitToUser(@RequestBody Habit habit, String userId) {
+    public ResponseEntity<String> addHabitToUser(@RequestBody Habit habit, UUID userId) {
         if (!userService.addHabitToUser(habit, userId))
             return ResponseEntity.notFound().build();
         return ResponseEntity.status(HttpStatus.CREATED).body("Habit added successfully.");
     }
 
     @GetMapping("/getHabits")
-    public ResponseEntity<Iterable<HabitDTO>> getAllHabits(String userId) {
+    public ResponseEntity<Iterable<HabitDTO>> getAllHabits(UUID userId) {
         try {
             return ResponseEntity.ok(userService.getAllHabitsForUser(userId));
         } catch (Exception e) {

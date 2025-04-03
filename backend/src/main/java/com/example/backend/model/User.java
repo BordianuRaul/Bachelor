@@ -13,7 +13,8 @@ import java.util.UUID;
 @Table(name = "users")
 public class User {
     @Id
-    private final String id = UUID.randomUUID().toString();
+    @GeneratedValue
+    private UUID id;
 
     @Setter
     private String firstName;
@@ -29,6 +30,9 @@ public class User {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Habit> habits;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Journal journal;
 
     public User(String firstName, String lastName, String email, String password) {
         this.firstName = firstName;

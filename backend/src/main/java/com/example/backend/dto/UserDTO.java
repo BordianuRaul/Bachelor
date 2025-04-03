@@ -6,12 +6,12 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.UUID;
 
 @Getter
 @Setter
 public class UserDTO {
-    private String id;
+    private UUID id;
     private String firstName;
     private String lastName;
     private String email;
@@ -24,6 +24,6 @@ public class UserDTO {
         this.email = user.getEmail();
         this.habitNames = user.getHabits().stream()
                 .map(Habit::getName)
-                .collect(Collectors.toList());
+                .toList();
     }
 }

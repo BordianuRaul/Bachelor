@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
+import java.util.UUID;
 
 @Service
 public class UserService {
@@ -30,12 +30,8 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public Iterable<User> findAll() {
-        return userRepository.findAll();
-    }
-
     @Transactional
-    public boolean addHabitToUser(Habit habit, String userId) {
+    public boolean addHabitToUser(Habit habit, UUID userId) {
         try {
             User user = findUserById(userId);
             habit.setUser(user);
@@ -46,21 +42,17 @@ public class UserService {
         return true;
     }
 
-    private User findUserById(final String userId) {
+    private User findUserById(final UUID userId) {
         return userRepository.findUserById(userId);
     }
 
-    public List<HabitDTO> getAllHabitsForUser(final String userId ) {
-        return findUserById(userId).getHabits().stream().map(HabitDTO::new).collect(Collectors.toList());
-    }
-    public UserDTO getUserDTO(String userId) {
-        User user = findUserById(userId);
-        return new UserDTO(user);
+    public List<HabitDTO> getAllHabitsForUser(final UUID userId) {
+        return findUserById(userId).getHabits().stream().map(HabitDTO::new).toList();
     }
 
     public List<UserDTO> getAllUsersDTO() {
         List<User> users = userRepository.findAll();
-        return users.stream().map(UserDTO::new).collect(Collectors.toList());
+        return users.stream().map(UserDTO::new).toList();
     }
 }
 
