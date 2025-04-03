@@ -15,6 +15,7 @@ public class UserDTO {
     private String firstName;
     private String lastName;
     private String email;
+    private String password;
     private List<String> habitNames;
 
     public UserDTO(User user) {
@@ -22,8 +23,11 @@ public class UserDTO {
         this.firstName = user.getFirstName();
         this.lastName = user.getLastName();
         this.email = user.getEmail();
+        this.password = user.getPassword();
         this.habitNames = user.getHabits().stream()
                 .map(Habit::getName)
                 .toList();
     }
+
+    public UserDTO() {}
 }

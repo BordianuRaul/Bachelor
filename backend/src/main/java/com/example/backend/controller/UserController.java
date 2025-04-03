@@ -23,16 +23,17 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody User user) {
+    public ResponseEntity<String> register(@RequestBody UserDTO userDTO) {
         try {
-            Optional<User> existingUser = userService.findUserByEmail(user.getEmail());
+            Optional<User> existingUser = userService.findUserByEmail(userDTO.getEmail());
             if (existingUser.isPresent()) {
                 return ResponseEntity.status(HttpStatus.CONFLICT).body("User already exists.");
             }
+            final User user = new User(userDTO.getFirstName(), userDTO.getLastName(), userDTO.getEmail(), userDTO.getPassword());
             userService.save(user);
             return ResponseEntity.status(HttpStatus.CREATED).body("User registered successfully.");
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Registration failed.");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Registration failed." + e.getMessage());
         }
     }
 

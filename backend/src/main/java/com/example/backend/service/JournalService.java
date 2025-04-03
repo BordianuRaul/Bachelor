@@ -21,7 +21,7 @@ public class JournalService {
     }
 
     public void addJournalPageToJournal(JournalPage journalPage, UUID userId) {
-        final Optional<Journal> journalOptional = journalRepository.findById(userId);
+        final Optional<Journal> journalOptional = journalRepository.findByUserId(userId);
 
         if (journalOptional.isPresent()) {
             final Journal journal = journalOptional.get();
