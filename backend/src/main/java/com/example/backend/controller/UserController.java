@@ -1,5 +1,8 @@
 package com.example.backend.controller;
 
+import com.example.backend.dto.HabitDTO;
+import com.example.backend.dto.UserDTO;
+import com.example.backend.model.Habit;
 import com.example.backend.model.User;
 import com.example.backend.service.UserService;
 import org.springframework.http.HttpStatus;
@@ -7,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -47,7 +51,7 @@ public class UserController {
             if (user.getPassword().equals(credentials.get("password"))) {
                 Map<String, Object> response = new HashMap<>();
                 response.put("message", "Login successful.");
-                response.put("user", user);
+                response.put("user", new UserDTO(user));
                 return ResponseEntity.ok(response);
             } else {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
@@ -58,8 +62,30 @@ public class UserController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<Iterable<User>> getAllUsers() {
-        return ResponseEntity.ok(userService.findAll());
+    public ResponseEntity<Iterable<UserDTO>> getAllUsers() {
+        try {
+            List<UserDTO> userDTOs = userService.getAllUsersDTO();
+            return ResponseEntity.ok(userDTOs);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+
+    //ADD JWT FOR TOKENIZED LOGIN
+    @PostMapping("/addHabit")
+    public ResponseEntity<String> addHabitToUser(@RequestBody Habit habit, String userId) {
+        if (!userService.addHabitToUser(habit, userId))
+            return ResponseEntity.notFound().build();
+        return ResponseEntity.status(HttpStatus.CREATED).body("Habit added successfully.");
+    }
+
+    @GetMapping("/getHabits")
+    public ResponseEntity<Iterable<HabitDTO>> getAllHabits(String userId) {
+        try {
+            return ResponseEntity.ok(userService.getAllHabitsForUser(userId));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
     }
 }
 
