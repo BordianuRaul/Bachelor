@@ -7,6 +7,7 @@ import com.example.backend.model.User;
 import com.example.backend.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,10 +17,29 @@ import java.util.UUID;
 @Service
 public class UserService {
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
+
+    public void registerNewUser(UserDTO userDTO) {
+        String hashedPassword = passwordEncoder.encode(userDTO.getPassword());
+
+        User user = new User(
+                userDTO.getFirstName(),
+                userDTO.getLastName(),
+                userDTO.getEmail(),
+                hashedPassword
+        );
+
+        userRepository.save(user);
+    }
+
+    public boolean checkPassword(User user, String rawPassword) {
+        return passwordEncoder.matches(rawPassword, user.getPassword());
     }
 
     public Optional<User> findUserByEmail(String email) {
@@ -42,7 +62,7 @@ public class UserService {
         return true;
     }
 
-    private User findUserById(final UUID userId) {
+    public User findUserById(final UUID userId) {
         return userRepository.findUserById(userId);
     }
 
