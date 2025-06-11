@@ -20,7 +20,7 @@ public class Application {
 
     private String packageName;
 
-    private String category; // could be made an Enum out of this
+    private String category;
 
     @OneToMany(mappedBy = "application", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ApplicationHourlyUsage> hourlyUsages = new ArrayList<>();
