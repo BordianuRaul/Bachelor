@@ -34,6 +34,13 @@ public class User {
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Journal journal;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<LocationTimestamp> locationTimestamps;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ApplicationHourlyUsage> applicationHourlyUsages;
+
+
     public User(String firstName, String lastName, String email, String password) {
         this.firstName = firstName;
         this.lastName = lastName;
@@ -41,6 +48,8 @@ public class User {
         this.password = password;
         this.habits = new ArrayList<>();
         this.journal = new Journal(this);
+        this.locationTimestamps = new ArrayList<>();
+        this.applicationHourlyUsages = new ArrayList<>();
     }
 
     public User() {

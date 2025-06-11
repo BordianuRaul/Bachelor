@@ -24,7 +24,7 @@ public class SRHIController {
         this.srhiService = srhiService;
     }
 
-    @GetMapping("/result")
+    @PostMapping("/result")
     public ResponseEntity<String> getInformationAboutTheHabitsSRHI(@RequestHeader("Authorization") String authHeader, @RequestBody List<Integer> answers) {
         try {
             String token = authHeader.substring("Bearer ".length());
