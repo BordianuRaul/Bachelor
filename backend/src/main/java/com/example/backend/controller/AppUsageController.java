@@ -2,7 +2,7 @@ package com.example.backend.controller;
 
 import com.example.backend.dto.ApplicationDailyUsageDTO;
 import com.example.backend.model.User;
-import com.example.backend.service.ApplicationHourlyUsageService;
+import com.example.backend.service.AppUsageService;
 import com.example.backend.service.ApplicationService;
 import com.example.backend.service.UserService;
 import com.example.backend.utils.JwtUtils;
@@ -19,7 +19,7 @@ import java.util.UUID;
 @RequestMapping("/api/appUsage")
 public class AppUsageController {
 
-    private final ApplicationHourlyUsageService applicationHourlyUsageService;
+    private final AppUsageService applicationHourlyUsageService;
 
     private final ApplicationService applicationService;
 
@@ -28,7 +28,7 @@ public class AppUsageController {
     private final JwtUtils jwtUtils;
 
 
-    public AppUsageController(ApplicationHourlyUsageService applicationHourlyUsageService, JwtUtils jwtUtils, ApplicationService applicationService, UserService userService) {
+    public AppUsageController(AppUsageService applicationHourlyUsageService, JwtUtils jwtUtils, ApplicationService applicationService, UserService userService) {
         this.applicationHourlyUsageService = applicationHourlyUsageService;
         this.jwtUtils = jwtUtils;
         this.applicationService = applicationService;
@@ -77,6 +77,25 @@ public class AppUsageController {
         }
     }
 
+    @GetMapping("/findPossibleHabits")
+    public ResponseEntity<List<String>> findPossibleHabits(@RequestHeader("Authorization") String authHeader) {
+        try {
+            if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+                return ResponseEntity
+                        .status(HttpStatus.UNAUTHORIZED)
+                        .body(List.of("Missing or invalid Authorization header."));
+            }
 
+            String token = authHeader.substring(7);
+            UUID userId = jwtUtils.extractUserId(token);
+            User user = userService.findUserById(userId);
 
+            List<String> habitMessages = applicationHourlyUsageService.findPossibleHabits(user);
+            return ResponseEntity.ok(habitMessages);
+        } catch (Exception e) {
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(List.of("Failed to retrieve possible habits: " + e.getMessage()));
+        }
+    }
 }
