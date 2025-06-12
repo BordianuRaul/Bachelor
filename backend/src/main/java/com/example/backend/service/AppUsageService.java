@@ -37,8 +37,8 @@ public class AppUsageService {
     );
 
     @Autowired
-    public AppUsageService(ApplicationHourlyUsageRepository applicationHourlyUsageRepository, ApplicationHourlyUsageRepository applicationHourlyUsageRepository1, ApplicationRepository applicationRepository) {
-        this.applicationHourlyUsageRepository = applicationHourlyUsageRepository1;
+    public AppUsageService(ApplicationHourlyUsageRepository applicationHourlyUsageRepository, ApplicationRepository applicationRepository) {
+        this.applicationHourlyUsageRepository = applicationHourlyUsageRepository;
         this.applicationRepository = applicationRepository;
     }
     
