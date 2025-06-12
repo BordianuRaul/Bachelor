@@ -4,14 +4,13 @@ import com.example.backend.dto.ApplicationDailyUsageDTO;
 import com.example.backend.model.User;
 import com.example.backend.service.ApplicationHourlyUsageService;
 import com.example.backend.service.ApplicationService;
+import com.example.backend.service.UserService;
 import com.example.backend.utils.JwtUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -22,14 +21,18 @@ public class AppUsageController {
 
     private final ApplicationHourlyUsageService applicationHourlyUsageService;
 
-    private final JwtUtils jwtUtils;
-
     private final ApplicationService applicationService;
 
-    public AppUsageController(ApplicationHourlyUsageService applicationHourlyUsageService, JwtUtils jwtUtils, ApplicationService applicationService) {
+    private final UserService userService;
+
+    private final JwtUtils jwtUtils;
+
+
+    public AppUsageController(ApplicationHourlyUsageService applicationHourlyUsageService, JwtUtils jwtUtils, ApplicationService applicationService, UserService userService) {
         this.applicationHourlyUsageService = applicationHourlyUsageService;
         this.jwtUtils = jwtUtils;
         this.applicationService = applicationService;
+        this.userService = userService;
     }
 
     @GetMapping("/lastUpdate")
@@ -55,15 +58,23 @@ public class AppUsageController {
             @RequestHeader("Authorization") String authHeader,
             @RequestBody List<ApplicationDailyUsageDTO> usageList) {
 
-        // 🔍 Set breakpoint here to inspect incoming list in debugger
-        System.out.println("Received usage data: " + usageList.size());
+        try {
+            if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Missing or invalid Authorization header.");
+            }
 
-        // Example print for quick CLI check (can be removed)
-        for (ApplicationDailyUsageDTO usage : usageList) {
-            System.out.println("App: " + usage.name + ", Package: " + usage.packageName);
+            String token = authHeader.substring(7);
+            UUID userId = jwtUtils.extractUserId(token);
+            User user = userService.findUserById(userId);
+
+            applicationService.updateApplicationsUsed(usageList);
+            applicationHourlyUsageService.updateAppUsage(user, usageList);
+
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body("Application usage info updated successfully.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Failed updating apps usage info. " + e.getMessage());
         }
-
-        return ResponseEntity.ok("Received " + usageList.size() + " records");
     }
 
 

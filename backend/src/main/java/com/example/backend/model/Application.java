@@ -25,4 +25,13 @@ public class Application {
     @OneToMany(mappedBy = "application", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ApplicationHourlyUsage> hourlyUsages = new ArrayList<>();
 
+    public Application(String name, String packageName, String category) {
+        this.name = name;
+        this.packageName = packageName;
+        this.category = category;
+    }
+
+    public Application() {
+
+    }
 }

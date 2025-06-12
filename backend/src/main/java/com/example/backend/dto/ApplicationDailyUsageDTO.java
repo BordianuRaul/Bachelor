@@ -9,9 +9,9 @@ import java.util.List;
 @Getter
 @Setter
 public class ApplicationDailyUsageDTO {
-    public String name;
-    public String packageName;
-    public String category;
-    public LocalDate date;
-    public List<Integer> hourlyUsageInSeconds;
+    private String name;
+    private String packageName;
+    private String category;
+    private LocalDate date;
+    private List<Integer> hourlyUsageInSeconds;
 }

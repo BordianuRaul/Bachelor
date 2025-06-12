@@ -29,4 +29,15 @@ public class ApplicationHourlyUsage {
 
     private LocalDate date;
 
+    public ApplicationHourlyUsage(User user, Application app, int hour, int secondsSpent, LocalDate date) {
+        this.user = user;
+        this.application = app;
+        this.hour = hour;
+        this.secondsSpent = secondsSpent;
+        this.date = date;
+    }
+
+    public ApplicationHourlyUsage() {
+
+    }
 }
