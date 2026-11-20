@@ -19,7 +19,7 @@ for 2.0. If a 2.0 change contradicts something here, update this file in the sam
 | Auth | Stateless JWT (jjwt 0.11.5, HS256), BCrypt passwords |
 | Boilerplate | Lombok 1.18.36 |
 | Build | Maven wrapper (`backend/mvnw`) |
-| CI | `.github/workflows/build.yml`: `mvn verify` plus SonarCloud (`BordianuRaul_Bachelor`) |
+| CI | `.github/workflows/build.yml` (repo root): `./mvnw -B verify` on JDK 21, then a SonarCloud step that is **currently broken** (see CI) |
 
 ## Layout
 
@@ -187,10 +187,18 @@ and `JournalMapperUtils` exist but no endpoint uses them).
 - For anything touching queries or the schema in 2.0, add `@DataJpaTest` against Testcontainers MySQL
   (H2 won't reproduce MySQL's quoting or UUID behaviour).
 
-## CI caveat
+## CI
 
-`build.yml` sets up **JDK 17** but the POM targets **21**, so `mvn verify` in CI fails at compile time.
-Bump the workflow to `java-version: 21` before relying on CI or Sonar.
+The workflow lives at the repo root (`.github/workflows/`). Until HF-3 it sat under `backend/.github/`, where
+GitHub never picks it up, so v1 never had a CI run. It runs on pushes to `main` and on every PR, with
+`working-directory: backend`. The build step (`./mvnw -B verify`, so CI uses the same pinned Maven 3.9.9 as
+local builds) has to pass.
+
+**SonarCloud is broken right now.** The project `BordianuRaul_Bachelor` no longer exists, and `SONAR_TOKEN`
+gets HTTP 403. The step is `continue-on-error`, so the job shows green even though no analysis ran. HF-20
+(re-create the project and token) and HF-19 (make the step blocking) fix it. The step is skipped when there's
+no token (fork PRs).
+When the JDK changes (HF-16), change `java-version` in `build.yml` in the same PR.
 
 ## Conventions when changing code
 
