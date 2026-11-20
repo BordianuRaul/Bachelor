@@ -43,7 +43,7 @@ class UserControllerTest {
 
         assertEquals(201, response.getStatusCodeValue());
         assertEquals("User registered successfully.", response.getBody());
-        verify(userService, times(1)).registerNewUser(any(UserDTO.class));
+        verify(userService, times(1)).registerNewUser(userDTO);
     }
 
     @Test
@@ -99,6 +99,9 @@ class UserControllerTest {
         ResponseEntity<Map<String, Object>> response = userController.login(credentials);
 
         assertEquals(401, response.getStatusCodeValue());
+        assertNull(response.getBody());
+        verify(userService).checkPassword(user, "wrongpass");
+        verify(jwtUtils, never()).generateToken(any());
     }
 
     @Test
@@ -110,5 +113,7 @@ class UserControllerTest {
         ResponseEntity<Map<String, Object>> response = userController.login(credentials);
 
         assertEquals(404, response.getStatusCodeValue());
+        verify(userService, never()).checkPassword(any(), any());
+        verify(jwtUtils, never()).generateToken(any());
     }
 }
