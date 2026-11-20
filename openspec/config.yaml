@@ -17,7 +17,7 @@ rules:
     - Keep it under one page
     - Always state what is out of scope
   specs:
-    - 'Every requirement has at least one scenario; each scenario is covered by a test or marked "(manual: <reason>)"'
+    - 'Every requirement has at least one scenario; each scenario is covered by a test, names the HF task that adds the missing test setup, or is marked "(manual: <reason>)"'
     - API requirements state request shape, response shape and every status code
   design:
     - Name at least one rejected alternative and why it lost
