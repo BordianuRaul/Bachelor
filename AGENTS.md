@@ -192,6 +192,16 @@ and `JournalMapperUtils` exist but no endpoint uses them).
 `build.yml` sets up **JDK 17** but the POM targets **21**, so `mvn verify` in CI fails at compile time.
 Bump the workflow to `java-version: 21` before relying on CI or Sonar.
 
+## Specs (OpenSpec)
+
+Tasks in SDD mode (criteria in the workspace `../AGENTS.md`: anything a user or the client sees, schema, API
+contract, design choices, not just size) are spec-driven. Each one is an OpenSpec change in `openspec/changes/`,
+archived to `openspec/changes/archive/` with its delta merged into `openspec/specs/` before the PR opens.
+**`openspec/specs/` is the authoritative contract** for the behaviour it covers: read it before you change that
+behaviour. The table in "API surface" stays as a summary and is updated in the same PR. If they disagree, the spec wins.
+Project constraints for the artifacts are in `openspec/config.yaml`. The workflow (which tasks are spec-driven,
+naming, review) is in the workspace `../AGENTS.md`.
+
 ## Conventions when changing code
 
 - Constructor injection (some classes still have stray `@Autowired` on fields or constructors; don't add more).
