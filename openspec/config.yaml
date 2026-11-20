@@ -1,0 +1,26 @@
+schema: spec-driven
+
+# Constraints an agent can't read from the code. Workflow rules: HabbitFinder2.0/AGENTS.md (workspace).
+context: |
+  HabitFinder 2.0 backend (Spring Boot + MariaDB), part of Raul Bordianu's master's dissertation
+  (databases master's, UBB Cluj). The database schema is a subject of the dissertation: every schema
+  decision must be versioned, reviewable and explainable in the thesis.
+  Raul reviews and merges every PR. One HF task = one PR of at most 200 code lines
+  (tests and openspec/ excluded).
+  The Flutter client (BordianuRaul/BachelorFrontend) checks exact HTTP status codes, so a contract change
+  must state every status code and needs a paired client task.
+
+rules:
+  proposal:
+    - 'Title starts with the HF task ID, e.g. "HF-6: Baseline the schema with Flyway"'
+    - Keep it under one page
+    - Always state what is out of scope
+  specs:
+    - Every requirement has at least one scenario a test can check
+    - API requirements state request shape, response shape and every status code
+  design:
+    - Name at least one rejected alternative and why it lost
+  tasks:
+    - The whole tasks.md must fit one PR within the 200-line code budget; if it can't, split the HF task first
+    - Schema changes are Flyway migrations (from HF-6 on), never ddl-auto
+    - Every spec scenario maps to a test task
