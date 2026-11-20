@@ -7,8 +7,10 @@ on:
     types: [opened, synchronize, reopened]
 jobs:
   build:
-    name: Build, test and analyze
+    name: Build and test
     runs-on: ubuntu-latest
+    env:
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
     defaults:
       run:
         working-directory: backend
@@ -29,10 +31,11 @@ jobs:
           key: ${{ runner.os }}-sonar
           restore-keys: ${{ runner.os }}-sonar
       - name: Build and test
-        run: mvn -B verify
+        run: ./mvnw -B verify
       - name: SonarCloud analysis
-        # Non-blocking: the SonarCloud project dates from 2025 and may no longer exist.
+        # BROKEN until HF-20/HF-19: the project was deleted and the token gets HTTP 403.
+        # continue-on-error keeps it from blocking PRs meanwhile; the job's green check does NOT mean Sonar ran.
+        # Skipped when no token is available (PRs from forks get no secrets).
+        if: ${{ env.SONAR_TOKEN != '' }}
         continue-on-error: true
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: mvn -B org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=BordianuRaul_Bachelor
+        run: ./mvnw -B org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=BordianuRaul_Bachelor
