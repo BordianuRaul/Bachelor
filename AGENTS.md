@@ -19,7 +19,7 @@ for 2.0. If a 2.0 change contradicts something here, update this file in the sam
 | Auth | Stateless JWT (jjwt 0.11.5, HS256), BCrypt passwords |
 | Boilerplate | Lombok 1.18.36 |
 | Build | Maven wrapper (`backend/mvnw`) |
-| CI | `.github/workflows/build.yml`: `mvn verify` plus SonarCloud (`BordianuRaul_Bachelor`) |
+| CI | `.github/workflows/build.yml` (repo root): `mvn -B verify` on JDK 21, then a non-blocking SonarCloud step (`BordianuRaul_Bachelor`) |
 
 ## Layout
 
@@ -166,10 +166,13 @@ and `JournalMapperUtils` exist but no endpoint uses them).
 - For anything touching queries or the schema in 2.0, add `@DataJpaTest` against Testcontainers MySQL
   (H2 won't reproduce MySQL's quoting or UUID behaviour).
 
-## CI caveat
+## CI
 
-`build.yml` sets up **JDK 17** but the POM targets **21**, so `mvn verify` in CI fails at compile time.
-Bump the workflow to `java-version: 21` before relying on CI or Sonar.
+The workflow lives at the repo root (`.github/workflows/`). Until HF-3 it sat under `backend/.github/`, where
+GitHub never picks it up, so v1 never had a CI run. It runs on pushes to `main` and on every PR, with
+`working-directory: backend`. The build step (`mvn -B verify`) has to pass. The SonarCloud step is
+`continue-on-error` because the 2025 project may be gone. Make it blocking again once it's confirmed alive.
+When the JDK changes (HF-16), change `java-version` here in the same PR.
 
 ## Conventions when changing code
 
