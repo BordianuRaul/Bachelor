@@ -46,7 +46,7 @@ Layering is controller → service → repository. Controllers also parse the JW
 ```bash
 cd backend
 ./mvnw spring-boot:run          # needs a local MySQL with a `bachelor` database
-./mvnw test                     # unit tests; no DB needed. RED on main: 2 stale UserControllerTest failures (HF-17)
+./mvnw test                     # unit tests; no DB needed
 ./mvnw -DskipTests package      # jar in target/
 ```
 
@@ -181,8 +181,8 @@ and `JournalMapperUtils` exist but no endpoint uses them).
 - Plain JUnit 5 + Mockito (`@InjectMocks`/`@Mock`). No `@SpringBootTest`/`@DataJpaTest`, so nothing
   covers the repositories, queries or security config. `HabitDTOTest`, `HabitTest`, `JournalPageRepositoryTest`,
   `JournalServiceTest` and `JournalMapperUtilsTest` are empty classes. 9 tests in total.
-- **The suite is red on main**: `UserControllerTest` has 2 stale tests (they expect `save()` and never stub
-  `checkPassword`/`JwtUtils`). Nobody noticed because CI never ran. Fixed in HF-17.
+- `UserControllerTest` had 2 stale tests that went unnoticed until CI first ran (fixed in HF-17). Hashing in
+  `UserService` is still untested (HF-21).
 - `AppUsageService`, `SRHIService` and the JWT code have **no tests**.
 - For anything touching queries or the schema in 2.0, add `@DataJpaTest` against Testcontainers MySQL
   (H2 won't reproduce MySQL's quoting or UUID behaviour).

@@ -3,6 +3,7 @@ package com.example.backend.controller;
 import com.example.backend.dto.UserDTO;
 import com.example.backend.model.User;
 import com.example.backend.service.UserService;
+import com.example.backend.utils.JwtUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
@@ -20,6 +21,9 @@ class UserControllerTest {
 
     @Mock
     private UserService userService;
+
+    @Mock
+    private JwtUtils jwtUtils;
 
     private AutoCloseable closeable;
 
@@ -39,7 +43,7 @@ class UserControllerTest {
 
         assertEquals(201, response.getStatusCodeValue());
         assertEquals("User registered successfully.", response.getBody());
-        verify(userService, times(1)).save(any(User.class));
+        verify(userService, times(1)).registerNewUser(userDTO);
     }
 
     @Test
@@ -52,7 +56,7 @@ class UserControllerTest {
 
         assertEquals(409, response.getStatusCodeValue());
         assertEquals("User already exists.", response.getBody());
-        verify(userService, never()).save(any());
+        verify(userService, never()).registerNewUser(any());
     }
 
     @Test
@@ -73,12 +77,15 @@ class UserControllerTest {
         Map<String, String> credentials = Map.of("email", "alice@example.com", "password", "secret");
 
         when(userService.findUserByEmail("alice@example.com")).thenReturn(Optional.of(user));
+        when(userService.checkPassword(user, "secret")).thenReturn(true);
+        when(jwtUtils.generateToken(user)).thenReturn("signed.jwt.token");
 
         ResponseEntity<Map<String, Object>> response = userController.login(credentials);
 
         assertEquals(200, response.getStatusCodeValue());
         assertEquals("Login successful.", response.getBody().get("message"));
         assertNotNull(response.getBody().get("user"));
+        assertEquals("signed.jwt.token", response.getBody().get("token"));
     }
 
     @Test
@@ -87,10 +94,14 @@ class UserControllerTest {
         Map<String, String> credentials = Map.of("email", "bob@example.com", "password", "wrongpass");
 
         when(userService.findUserByEmail("bob@example.com")).thenReturn(Optional.of(user));
+        when(userService.checkPassword(user, "wrongpass")).thenReturn(false);
 
         ResponseEntity<Map<String, Object>> response = userController.login(credentials);
 
         assertEquals(401, response.getStatusCodeValue());
+        assertNull(response.getBody());
+        verify(userService).checkPassword(user, "wrongpass");
+        verify(jwtUtils, never()).generateToken(any());
     }
 
     @Test
@@ -102,5 +113,7 @@ class UserControllerTest {
         ResponseEntity<Map<String, Object>> response = userController.login(credentials);
 
         assertEquals(404, response.getStatusCodeValue());
+        verify(userService, never()).checkPassword(any(), any());
+        verify(jwtUtils, never()).generateToken(any());
     }
 }
